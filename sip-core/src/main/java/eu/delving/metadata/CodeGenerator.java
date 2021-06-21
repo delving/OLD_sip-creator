@@ -21,23 +21,13 @@
 
 package eu.delving.metadata;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
+import eu.delving.groovy.StandardMappingFunctions;
+
+import java.util.*;
 
 import static eu.delving.metadata.OptRole.CHILD;
 import static eu.delving.metadata.OptRole.ROOT;
-import static eu.delving.metadata.StringUtil.getConstantFromGroovyCode;
-import static eu.delving.metadata.StringUtil.indentCode;
-import static eu.delving.metadata.StringUtil.stringToLines;
-import static eu.delving.metadata.StringUtil.tagToVariable;
-import static eu.delving.metadata.StringUtil.toGroovyFirstIdentifier;
-import static eu.delving.metadata.StringUtil.toGroovyIdentifier;
+import static eu.delving.metadata.StringUtil.*;
 
 public class CodeGenerator {
     public static final String ABSENT_IS_FALSE = "_absent_ = false";
@@ -91,6 +81,9 @@ public class CodeGenerator {
             codeOut.line(String.format("String %s = '''%s'''", entry.getKey(), value));
         }
         codeOut.line("String _uniqueIdentifier = 'UNIQUE_IDENTIFIER'");
+
+        StandardMappingFunctions.appendStandardFunctionsToScript(codeOut);
+
         codeOut.line("// Functions from Mapping:");
         Set<String> names = new TreeSet<>();
         for (MappingFunction function : recMapping.getFunctions()) {

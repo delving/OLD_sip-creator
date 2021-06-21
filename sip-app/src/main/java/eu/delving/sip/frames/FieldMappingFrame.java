@@ -21,6 +21,7 @@
 
 package eu.delving.sip.frames;
 
+import eu.delving.groovy.StandardMappingFunctions;
 import eu.delving.metadata.MappingFunction;
 import eu.delving.metadata.MappingResult;
 import eu.delving.metadata.NodeMapping;
@@ -284,6 +285,7 @@ public class FieldMappingFrame extends FrameBase {
                 if (fromRecDef != null) mappingFunctions.addAll(fromRecDef);
                 mappingFunctions.addAll(mappingModel.getRecMapping().getFunctions());
             }
+            mappingFunctions.addAll(StandardMappingFunctions.asList());
             setList(mappingFunctions);
         }
 

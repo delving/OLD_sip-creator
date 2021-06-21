@@ -24,12 +24,15 @@ package eu.delving.metadata;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import eu.delving.XStreamFactory;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * This class describes a utility function (closure) which is available in the mapping code so that
@@ -52,11 +55,25 @@ public class MappingFunction implements Comparable<MappingFunction> {
     @XStreamAlias("groovy-code")
     public List<String> groovyCode;
 
+    @XStreamOmitField
+    private boolean isStandard;
+
+    @XStreamOmitField
+    private List<String> parameterNames;
+
     public MappingFunction() {
     }
 
     public MappingFunction(String name) {
         this.name = name;
+    }
+
+    public static MappingFunction createStandardMappingFunction(String name, List<String> parameterNames) {
+        MappingFunction mappingFunction = new MappingFunction();
+        mappingFunction.isStandard = true;
+        mappingFunction.name = name;
+        mappingFunction.parameterNames = new ArrayList<>(parameterNames);
+        return mappingFunction;
     }
 
     public String getDocumentation() {
@@ -121,6 +138,9 @@ public class MappingFunction implements Comparable<MappingFunction> {
     }
 
     public String toString() {
+        if(isStandard) {
+            return name + "(" + parameterNames.stream().collect(Collectors.joining(",")) + ")";
+        }
         return String.format("%s(it)", name);
     }
 
